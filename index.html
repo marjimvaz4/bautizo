@@ -6,44 +6,28 @@
         content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Invitación Bautizo</title>
   <style>
-    :root {
-      --bg-a: #fffdf8;
-      --bg-b: #f6f6f6;
-      --shadow: 0 6px 18px rgba(0,0,0,.15);
-      --max-img: 980px; /* límite elegante en pantallas grandes */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #000; /* Para que no se vean huecos */
+      overflow-x: hidden;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { background: var(--bg-b); font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif; }
 
+    /* Cada sección ocupa toda la pantalla */
     section {
-      min-height: 100svh;           /* ocupa alto de pantalla en móvil */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    section:nth-of-type(odd)  { background: var(--bg-a); }
-    section:nth-of-type(even) { background: var(--bg-b); }
-
-    /* Imágenes responsivas */
-    .frame {
       width: 100%;
-      max-width: var(--max-img);
-      display: grid;
-      place-items: center;
-    }
-    .frame img {
-      width: min(100%, var(--max-img));
-      height: auto;
-      display: block;
-      border-radius: 14px;
-      box-shadow: var(--shadow);
+      height: 100vh; /* altura de toda la pantalla */
+      display: flex;
     }
 
-    /* Espacio extra para evitar “pequeño” en móvil */
-    @media (max-width: 480px) {
-      section { padding: 16px; }
-      .frame img { border-radius: 12px; }
+    /* Imágenes a pantalla completa */
+    section img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* rellena la pantalla sin deformar */
+      display: block;
+      border-radius: 0;
+      box-shadow: none;
     }
   </style>
 </head>
@@ -51,60 +35,46 @@
 
   <!-- Portada -->
   <section>
-    <div class="frame">
-      <img src="./img/portada.png" alt="Portada de la invitación" loading="eager" />
-    </div>
+    <img src="./img/portada.png" alt="Portada de la invitación" loading="eager" />
   </section>
 
   <!-- Fotos -->
   <section>
-    <div class="frame">
-      <img src="./img/fotos.png" alt="Fotos" loading="lazy" />
-    </div>
+    <img src="./img/fotos.png" alt="Fotos" loading="lazy" />
   </section>
 
   <!-- Celebración -->
   <section>
-    <div class="frame">
-      <img src="./img/celebracion.png" alt="Celebración" loading="lazy" />
-    </div>
+    <img src="./img/celebracion.png" alt="Celebración" loading="lazy" />
   </section>
 
   <!-- Frase final -->
   <section>
-    <div class="frame">
-      <img src="./img/frase.png" alt="Frase final" loading="lazy" />
-    </div>
+    <img src="./img/frase.png" alt="Frase final" loading="lazy" />
   </section>
 
-  <!-- Música de fondo (sin botón) -->
+  <!-- Música de fondo -->
   <audio id="bgm" loop playsinline>
     <source src="./music/cancion.mp3" type="audio/mpeg" />
     Tu navegador no soporta audio HTML5.
   </audio>
 
   <script>
-    // Intenta reproducir de inicio (algunos navegadores lo permiten)
     const audio = document.getElementById('bgm');
 
     function startAudio() {
-      // iOS/Android: necesita gesto de usuario (tap/scroll)
-      audio.play().catch(() => { /* seguirá intentando en el próximo gesto */ });
-      // Desengancha los listeners tras el primer intento
+      audio.play().catch(() => {});
       ['touchstart', 'click', 'scroll'].forEach(ev =>
         document.removeEventListener(ev, startAudio, { passive: true })
       );
     }
 
-    // Primer intento al cargar
     audio.play().catch(() => {
-      // Si falla, arrancará en el primer gesto del usuario (sin mostrar botón)
       ['touchstart', 'click', 'scroll'].forEach(ev =>
         document.addEventListener(ev, startAudio, { passive: true, once: true })
       );
     });
 
-    // Mejora: si el usuario vuelve al tab, reintenta
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) audio.play().catch(() => {});
     });
