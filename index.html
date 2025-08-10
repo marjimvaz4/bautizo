@@ -7,53 +7,45 @@
   <title>Invitación Bautizo</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
-      background-color: #000; /* Para que no se vean huecos */
-      overflow-x: hidden;
-    }
+    html, body { height: 100%; background:#000; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; overflow-x: hidden; }
 
-    /* Cada sección ocupa toda la pantalla */
-    section {
+    /* Cada sección ocupa 100% de pantalla real en móvil (iOS incluido) */
+    .screen {
       width: 100%;
-      height: 100vh; /* altura de toda la pantalla */
-      display: flex;
-    }
-
-    /* Imágenes a pantalla completa */
-    section img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover; /* rellena la pantalla sin deformar */
+      height: 100svh;         /* iOS barras pequeñas */
+      min-height: 100svh;
+      /* fallbacks */
+      height: 100dvh;
+      min-height: 100dvh;
       display: block;
-      border-radius: 0;
-      box-shadow: none;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover; /* llena sin deformar */
     }
+
+    /* Por si quieres algo de separación segura en iPhone con notch (opcional) */
+    .pad-safe { padding-bottom: env(safe-area-inset-bottom); }
+
+    /* Si prefieres seguir usando <img>, descomenta este bloque:
+    section img { width:100%; height:100svh; object-fit:cover; display:block; border-radius:0; box-shadow:none; }
+    */
   </style>
 </head>
 <body>
 
   <!-- Portada -->
-  <section>
-    <img src="./img/portada.png" alt="Portada de la invitación" loading="eager" />
-  </section>
+  <section class="screen pad-safe" style="background-image: url('./img/portada.png');"></section>
 
   <!-- Fotos -->
-  <section>
-    <img src="./img/fotos.png" alt="Fotos" loading="lazy" />
-  </section>
+  <section class="screen" style="background-image: url('./img/fotos.png');"></section>
 
   <!-- Celebración -->
-  <section>
-    <img src="./img/celebracion.png" alt="Celebración" loading="lazy" />
-  </section>
+  <section class="screen" style="background-image: url('./img/celebracion.png');"></section>
 
   <!-- Frase final -->
-  <section>
-    <img src="./img/frase.png" alt="Frase final" loading="lazy" />
-  </section>
+  <section class="screen" style="background-image: url('./img/frase.png');"></section>
 
-  <!-- Música de fondo -->
+  <!-- Música -->
   <audio id="bgm" loop playsinline>
     <source src="./music/cancion.mp3" type="audio/mpeg" />
     Tu navegador no soporta audio HTML5.
@@ -63,20 +55,21 @@
     const audio = document.getElementById('bgm');
 
     function startAudio() {
-      audio.play().catch(() => {});
-      ['touchstart', 'click', 'scroll'].forEach(ev =>
-        document.removeEventListener(ev, startAudio, { passive: true })
+      audio.play().catch(()=>{});
+      ['touchstart','click','scroll'].forEach(ev =>
+        document.removeEventListener(ev, startAudio, {passive:true})
       );
     }
 
+    // Intento inicial
     audio.play().catch(() => {
-      ['touchstart', 'click', 'scroll'].forEach(ev =>
-        document.addEventListener(ev, startAudio, { passive: true, once: true })
+      ['touchstart','click','scroll'].forEach(ev =>
+        document.addEventListener(ev, startAudio, {passive:true, once:true})
       );
     });
 
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) audio.play().catch(() => {});
+      if (!document.hidden) audio.play().catch(()=>{});
     });
   </script>
 </body>
