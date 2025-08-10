@@ -1,32 +1,49 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Invitación Bautizo</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background-color: #f5f5f5; }
+    :root {
+      --bg-a: #fffdf8;
+      --bg-b: #f6f6f6;
+      --shadow: 0 6px 18px rgba(0,0,0,.15);
+      --max-img: 980px; /* límite elegante en pantallas grandes */
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg-b); font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif; }
 
     section {
-      width: 100%;
-      min-height: 100vh;
+      min-height: 100svh;           /* ocupa alto de pantalla en móvil */
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       padding: 20px;
-      background-color: #fffdf8;
     }
+    section:nth-of-type(odd)  { background: var(--bg-a); }
+    section:nth-of-type(even) { background: var(--bg-b); }
 
-    section:nth-child(even) {
-      background-color: #fdfdfd;
+    /* Imágenes responsivas */
+    .frame {
+      width: 100%;
+      max-width: var(--max-img);
+      display: grid;
+      place-items: center;
     }
-
-    section img {
-      max-width: 90%;
+    .frame img {
+      width: min(100%, var(--max-img));
       height: auto;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      display: block;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    /* Espacio extra para evitar “pequeño” en móvil */
+    @media (max-width: 480px) {
+      section { padding: 16px; }
+      .frame img { border-radius: 12px; }
     }
   </style>
 </head>
@@ -34,42 +51,64 @@
 
   <!-- Portada -->
   <section>
-    <img src="img/portada.png" alt="Portada de la invitación">
+    <div class="frame">
+      <img src="./img/portada.png" alt="Portada de la invitación" loading="eager" />
+    </div>
   </section>
 
   <!-- Fotos -->
   <section>
-    <img src="img/fotos.png" alt="Fotos del bautizo">
+    <div class="frame">
+      <img src="./img/fotos.png" alt="Fotos" loading="lazy" />
+    </div>
   </section>
 
   <!-- Celebración -->
   <section>
-    <img src="img/celebracion.png" alt="Lugar y celebración">
+    <div class="frame">
+      <img src="./img/celebracion.png" alt="Celebración" loading="lazy" />
+    </div>
   </section>
 
   <!-- Frase final -->
   <section>
-    <img src="img/frase.png" alt="Frase de despedida">
+    <div class="frame">
+      <img src="./img/frase.png" alt="Frase final" loading="lazy" />
+    </div>
   </section>
 
-  <!-- Música de fondo -->
-  <audio id="musica" loop>
-    <source src="music/cancion.mp3" type="audio/mpeg">
+  <!-- Música de fondo (sin botón) -->
+  <audio id="bgm" loop playsinline>
+    <source src="./music/cancion.mp3" type="audio/mpeg" />
     Tu navegador no soporta audio HTML5.
   </audio>
 
   <script>
-    const musica = document.getElementById('musica');
-    musica.play().catch(() => {
-      function iniciarMusica() {
-        musica.play().catch(err => console.log('Autoplay bloqueado:', err));
-        document.removeEventListener('click', iniciarMusica);
-        document.removeEventListener('scroll', iniciarMusica);
-      }
-      document.addEventListener('click', iniciarMusica);
-      document.addEventListener('scroll', iniciarMusica);
+    // Intenta reproducir de inicio (algunos navegadores lo permiten)
+    const audio = document.getElementById('bgm');
+
+    function startAudio() {
+      // iOS/Android: necesita gesto de usuario (tap/scroll)
+      audio.play().catch(() => { /* seguirá intentando en el próximo gesto */ });
+      // Desengancha los listeners tras el primer intento
+      ['touchstart', 'click', 'scroll'].forEach(ev =>
+        document.removeEventListener(ev, startAudio, { passive: true })
+      );
+    }
+
+    // Primer intento al cargar
+    audio.play().catch(() => {
+      // Si falla, arrancará en el primer gesto del usuario (sin mostrar botón)
+      ['touchstart', 'click', 'scroll'].forEach(ev =>
+        document.addEventListener(ev, startAudio, { passive: true, once: true })
+      );
+    });
+
+    // Mejora: si el usuario vuelve al tab, reintenta
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) audio.play().catch(() => {});
     });
   </script>
-
 </body>
 </html>
+
