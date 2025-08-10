@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invitación Bautizo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background-color: #f5f5f5; }
+
+    section {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background-color: #fffdf8;
+    }
+
+    section:nth-child(even) {
+      background-color: #fdfdfd;
+    }
+
+    section img {
+      max-width: 90%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Portada -->
+  <section>
+    <img src="img/portada.png" alt="Portada de la invitación">
+  </section>
+
+  <!-- Fotos -->
+  <section>
+    <img src="img/fotos.png" alt="Fotos del bautizo">
+  </section>
+
+  <!-- Celebración -->
+  <section>
+    <img src="img/celebracion.png" alt="Lugar y celebración">
+  </section>
+
+  <!-- Frase final -->
+  <section>
+    <img src="img/frase.png" alt="Frase de despedida">
+  </section>
+
+  <!-- Música de fondo -->
+  <audio id="musica" loop>
+    <source src="music/cancion.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+  <script>
+    const musica = document.getElementById('musica');
+    musica.play().catch(() => {
+      function iniciarMusica() {
+        musica.play().catch(err => console.log('Autoplay bloqueado:', err));
+        document.removeEventListener('click', iniciarMusica);
+        document.removeEventListener('scroll', iniciarMusica);
+      }
+      document.addEventListener('click', iniciarMusica);
+      document.addEventListener('scroll', iniciarMusica);
+    });
+  </script>
+
+</body>
+</html>
