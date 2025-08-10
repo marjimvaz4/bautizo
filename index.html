@@ -15,7 +15,6 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* Sección con marco fino */
     .screen {
       position: relative;
       width: 100%;
@@ -26,16 +25,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 3%; /* ← controla el grosor del marco */
     }
 
     .screen img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* mantiene proporción y deja borde */
-      border-radius: 10px;  /* esquinas suaves */
-      box-shadow: 0 4px 18px rgba(0,0,0,0.4); /* sombra ligera */
-      background-color: #fff; /* opcional: fondo blanco del marco */
+      max-width: 94%;   /* ancho máximo → deja marco lateral */
+      max-height: 94%;  /* alto máximo → deja marco arriba/abajo */
+      object-fit: contain; /* nunca se corta */
+      border-radius: 10px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+      background-color: #fff;
     }
   </style>
 </head>
